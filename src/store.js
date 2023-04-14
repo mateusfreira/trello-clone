@@ -11,14 +11,14 @@ const nunDb = new NunDb("ws://nun-db-1.localhost:3058", "trelo-real-time-arbiter
 window.nunDb = nunDb;
 const resolveQueue = {
     lastConflict: Promise.resolve(),
-    peddingConflicts: new Map(),
+    pendingConflicts: new Map(),
 };
 function resolveConflict(e) {
     const conflictId = +(new Date());
     return new Promise(resolve => {
-        resolveQueue.peddingConflicts.set(conflictId, resolve);
+        resolveQueue.pendingConflicts.set(conflictId, resolve);
         store.dispatch({
-            type: 'conflictReolution',
+            type: 'CONFLICT_RESOLUTION',
             conflictResolver: {
                 conflict: e,
                 conflictId,
@@ -37,16 +37,16 @@ const resolution = (state = {
     conflicted: false
 }, action) => {
     switch (action.type) {
-        case "conflictReolution":
+        case "CONFLICT_RESOLUTION":
             {
                 return {
                     conflicted: true,
                     conflictResolver: action.conflictResolver,
                 };
             }
-        case "conflictReolutionResolved":
+        case "CONFLICT_RESOLUTION_RESOLVED":
             {
-                const peddingResolve = resolveQueue.peddingConflicts.get(action.conflictId);
+                const peddingResolve = resolveQueue.pendingConflicts.get(action.conflictId);
                 peddingResolve({
                     id: action.conflictId,
                     value: action.value 
@@ -56,7 +56,7 @@ const resolution = (state = {
                     conflictResolver: null,
                 };
             }
-        case "newState":
+        case "UPDATE_STATE":
             {
                 return {
                     ...action.state.resolution,
@@ -69,13 +69,11 @@ const resolution = (state = {
 
 };
 
-const changed = (state = {
-    changed: false
-}, action) => {
+const changed = (state = { changed: false }, action) => {
     switch (action.type) {
-        case "newState":
-        case "conflictReolution":
-        case "conflictReolutionResolved":
+        case "UPDATE_STATE":
+        case "CONFLICT_RESOLUTION":
+        case "CONFLICT_RESOLUTION_RESOLVED":
             {
                 return {
                     changed: false
@@ -88,11 +86,12 @@ const changed = (state = {
     }
 
 };
+
 const board = (state = {
     lists: []
 }, action) => {
     switch (action.type) {
-        case "newState":
+        case "UPDATE_STATE":
             {
                 return action.state.board;
             }
@@ -136,7 +135,7 @@ const board = (state = {
 
 const listsById = (state = {}, action) => {
     switch (action.type) {
-        case "newState":
+        case "UPDATE_STATE":
             {
                 return action.state.listsById;
             }
@@ -248,7 +247,7 @@ const listsById = (state = {}, action) => {
 
 const cardsById = (state = {}, action) => {
     switch (action.type) {
-        case "newState":
+        case "UPDATE_STATE":
             {
                 return action.state.cardsById;
             }
@@ -329,7 +328,7 @@ const loadState = () => {
             if (e.value) {
                 e.value.resolution.conflicted = e.version === -2;
                 store.dispatch({
-                    type: 'newState',
+                    type: 'UPDATE_STATE',
                     state: e.value
                 });
             }

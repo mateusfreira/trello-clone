@@ -7,7 +7,7 @@ const ResolveConflict = ({ resolution, dispatch }) => {
     resolution.conflictResolver.finalState = resolution.conflictResolver.conflict.values.at(0).value;
     resolution.conflictResolver.finalState.resolution.conflicted = true;
     dispatch({
-      type: 'newState',
+      type: 'UPDATE_STATE',
       state: resolution.conflictResolver.finalState
     });
   };
@@ -15,7 +15,7 @@ const ResolveConflict = ({ resolution, dispatch }) => {
     resolution.conflictResolver.finalState = resolution.conflictResolver.conflict.values.at(1).value;
     resolution.conflictResolver.finalState.resolution.conflicted = true;
     dispatch({
-      type: 'newState',
+      type: 'UPDATE_STATE',
       state: resolution.conflictResolver.finalState
     });
   };
@@ -23,7 +23,7 @@ const ResolveConflict = ({ resolution, dispatch }) => {
     if(resolution.conflictResolver.finalState) {
       resolution.conflictResolver.finalState.resolution.conflicted = false;
       dispatch({
-        type: "conflictReolutionResolved",
+        type: "CONFLICT_RESOLUTION_RESOLVED",
         id: new Date().getTime(),
         conflictId: resolution.conflictResolver.conflictId,
         value: resolution.conflictResolver.finalState
