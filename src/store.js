@@ -7,7 +7,7 @@ import seed from "./seed";
 import NunDb from 'nun-db';
 
 window.conflictResolver = {};
-const nunDb = new NunDb("ws://nun-db-1.localhost:3058", "trelo-real-time-arbiter", "trelo-real-time-pwd");
+const nunDb = new NunDb("wss://ws.nundb.org", "trelo-real-time-arbiter", "trelo-real-time-pwd");
 window.nunDb = nunDb;
 const resolveQueue = {
     lastConflict: Promise.resolve(),
