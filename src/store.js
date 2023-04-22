@@ -69,7 +69,7 @@ const resolution = (state = {
 
 };
 
-const changed = (state = { changed: false }, action) => {
+const remoteState = (state = { changed: false }, action) => {
     switch (action.type) {
         case "UPDATE_STATE":
         case "CONFLICT_RESOLUTION":
@@ -309,7 +309,7 @@ const reducers = combineReducers({
     board,
     listsById,
     cardsById,
-    changed,
+    remoteState,
     resolution,
 });
 
@@ -344,7 +344,7 @@ const store = createStore(reducers, persistedState);
 store.subscribe(
     throttle(() => {
         const state = store.getState();
-        if (state.board.lists.length > 1 && state.changed.changed) {
+        if (state.board.lists.length > 1 && state.remoteState.changed) {
             saveState(state);
         }
     }, 1000)
