@@ -3,5 +3,5 @@ This is a fork from https://github.com/knowankit/trello-clone please use it as a
 
 
 
-
+[Blog post about on how to implement Nun-db on it](https://mateusfreira.github.io/@mateusfreira-trelo-clone-offline-first-with-nun-db-dealing-with-conflicts/)
 
