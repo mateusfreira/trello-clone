@@ -8,7 +8,7 @@ import EditButtons from "./EditButtons";
 
 class AddList extends Component {
   state = {
-    title: ""
+    title: " "
   };
 
   handleChangeTitle = e => this.setState({ title: e.target.value });

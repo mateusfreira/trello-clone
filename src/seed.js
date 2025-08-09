@@ -1,6 +1,7 @@
 import shortid from "shortid";
 
 export default function seed(store) {
+  return;
   console.log("Insert first list");
   const firstListId = shortid.generate();
 
